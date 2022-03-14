@@ -107,8 +107,6 @@ def get_aligned_images(
 
     image2_data = {}
     for ii, image2 in enumerate(images2):
-        if ii % 1000 == 0:
-            print(f"CCC {ii} of {len(images2)}")
         parts = parse_filename_parts(image2, pos_float=False)
         key = parts["lat"] + parts["lon"]
         if key not in image2_data:
@@ -117,8 +115,6 @@ def get_aligned_images(
 
     aligned_images = OrderedDict()
     for ii, image1 in enumerate(images1):
-        if ii % 1000 == 0:
-            print(f"DDD {ii} of {len(images1)}")
         aligned_images[Path(image1)] = []
         image1_parts = parse_filename_parts(image1, pos_float=False)
         key = image1_parts["lat"] + image1_parts["lon"]
