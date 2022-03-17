@@ -127,7 +127,7 @@ def get_aligned_images(
 
 def get_sar_to_eo_aligned_images(
         base_dir: Union[str, Path],
-        date_window: int=7,
+        date_window: int=2,
 )-> Dict[Path, List[Path]]:
     """Given a directory that holds sub-directories 'sent1', and 'sent2',
     for each VV or VH SAR image in 'sent1', will find and return all
