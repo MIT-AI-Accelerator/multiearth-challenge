@@ -10,7 +10,6 @@ def parse_filename_parts(
         image_path: Union[str, Path],
         pos_float: bool=True,
 ) -> Dict[str, Union[str, float, datetime.datetime]]:
-    
     """Image paths hold information on the sensor, band, position, and
     date. This function parses and returns these values.
 
@@ -60,7 +59,7 @@ def get_image_paths(image_dir: Union[str, Path], band: str)->List[Path]:
         The directory that holds image files.
 
     band: str
-        The sensor band of interest.  
+        The sensor band of interest.
 
     Return
     ------
@@ -122,13 +121,13 @@ def get_aligned_images(
             for image2_path, image2_parts in image2_data[key]:
                 if abs((image1_parts["date"] - image2_parts["date"]).days) <= date_window:
                     aligned_images[image1].append(image2_path)
-        
+
     return aligned_images
 
 
 def get_sar_to_eo_aligned_images(
         base_dir: Union[str, Path],
-        date_window: int=7,        
+        date_window: int=7,
 )-> Dict[Path, List[Path]]:
     """Given a directory that holds sub-directories 'sent1', and 'sent2',
     for each VV or VH SAR image in 'sent1', will find and return all
@@ -149,7 +148,7 @@ def get_sar_to_eo_aligned_images(
     ------
     Dict[Path, List[Path]]
         The path for each VV or VH SAR image path found in
-        sub-directory 'sent1' serves as dictionary keys.  The
+        sub-directory 'sent1' serves as dictionary keys. The
         corresponding dictionary value is a list of all spatially and
         temporally aligned B4, B2, or B2 band (RGB) images from
         sub-directory 'sent2'.
@@ -161,7 +160,7 @@ def get_sar_to_eo_aligned_images(
     sent2_dir = Path(base_dir, "sent2")
     if not sent2_dir.is_dir():
         raise ValueError(f"Passed directory [{base_dir}] does not contain sub-directory 'sent2'")
-    
+
     sent1_vv_images = get_image_paths(sent1_dir, "VV")
     sent1_vh_images = get_image_paths(sent1_dir, "VH")
     sent1_images = sorted(sent1_vv_images + sent1_vh_images)
