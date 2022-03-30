@@ -5,8 +5,6 @@ from pathlib import Path
 from typing import Dict, List, Sequence, Union, Any, Optional
 
 
-POS_EPS = 1.0e-3 # Image lat/lon coordinates are aligned at 0.01 degrees
-
 def parse_filename_parts(
         image_path: Union[str, Path],
         pos_float: bool=True,
