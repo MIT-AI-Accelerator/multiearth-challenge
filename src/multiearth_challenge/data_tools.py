@@ -1,7 +1,8 @@
 from collections import OrderedDict
 import datetime
+import json
 from pathlib import Path
-from typing import Dict, List, Sequence, Union, Any
+from typing import Dict, List, Sequence, Union, Any, Optional
 
 
 POS_EPS = 1.0e-3 # Image lat/lon coordinates are aligned at 0.01 degrees
@@ -67,7 +68,7 @@ def get_image_paths(image_dir: Union[str, Path], band: str)->List[Path]:
         All image paths within the passed directory that correspond to
         the specified sensor band.
     """
-    image_paths = list(Path(image_dir).glob(f"*_{band}_*.jpg"))
+    image_paths = list(Path(image_dir).glob(f"*_{band}_*.tiff"))
     if not len(image_paths):
         raise ValueError(f"Could not find images in directory [{image_dir}] with band [{band}]")
     return image_paths
@@ -128,6 +129,7 @@ def get_aligned_images(
 def get_sar_to_eo_aligned_images(
         base_dir: Union[str, Path],
         date_window: int=2,
+        output_file: Optional[Path]=None
 )-> Dict[Path, List[Path]]:
     """Given a directory that holds sub-directories 'sent1', and 'sent2',
     for each VV or VH SAR image in 'sent1', will find and return all
@@ -143,6 +145,16 @@ def get_sar_to_eo_aligned_images(
     date_window: int, default=15
         A window in +- days specifying whether two collects are close
         enough in time to be considered aligned (inclusive).
+
+    output_file: Optional[Path], default=None
+        Optional path to an output JSON file to write the aligned
+        images filenames (not the full paths).  The JSON file will
+        have format
+
+        {
+          "ex_sar_file1.tiff": ["ex_eo_file1.tiff", "ex_eo_file2.tiff"],
+          ...
+        }
 
     Return
     ------
@@ -170,4 +182,13 @@ def get_sar_to_eo_aligned_images(
     sent2_b2_images = get_image_paths(sent2_dir, "B2")
     sent2_images = sorted(sent2_b4_images + sent2_b3_images + sent2_b2_images)
 
-    return get_aligned_images(sent1_images, sent2_images, date_window)
+    aligned_imgs = get_aligned_images(sent1_images, sent2_images, date_window)
+
+    if output_file is not None:
+        aligned_imgs_filenames = OrderedDict()
+        for key, val in aligned_imgs.items():
+            aligned_imgs_filenames[key.name] = [ii.name for ii in val]
+        with open(output_file, 'w') as fout:
+            json.dump(aligned_imgs_filenames, fout, indent=4, sort_keys=True)
+
+    return aligned_imgs
