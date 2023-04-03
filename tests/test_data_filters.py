@@ -28,6 +28,7 @@ def test_date_filter(data_file):
         sorted_dates = np.sort(dates)
         
         min_date = sorted_dates[0]
+        print(f"HUH {type(min_date)} {min_date}")
         above_min_date = min_date + np.timedelta64(1, 'us')
         min_indices = np.where(dates == min_date)[0]
         filter = df.DateFilter(min_date=above_min_date)
