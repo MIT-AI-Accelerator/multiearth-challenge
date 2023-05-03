@@ -1,0 +1,2 @@
+include src/multiearth_challenge/data/sample_dataset/*.nc
+recursive-include src/multiearth_challenge/data/sample_dataset/ *.tiff
