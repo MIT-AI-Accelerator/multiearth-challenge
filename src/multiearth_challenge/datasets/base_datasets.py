@@ -505,7 +505,10 @@ class MultiEarthDatasetBase:
         and target data and vice-versa. The data will be filtered by
         any data filters that have been set.
 
-        With SARToEODataset, there will be only a single source datum.
+        Depending on the task, some derived classes will potentially
+        return multiple source samples paired with a single target
+        sample, while others, such as the SARToVisible dataset returns
+        a single source sample paired with one or more target sample.
 
         The DatasetData type is a dictionary that holds sample imagery
         as well as the image's collection date and the latitude /
