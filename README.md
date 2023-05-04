@@ -13,7 +13,7 @@ There are two sub-challenges associated with this effort.
 **1B. Prediction of collected imagery. An image generation task given historical data.**  
 
 ## Challenge Data
-Multi-modal data collected from Landsat-5, Landsat-8, Sentinel-1, and Sentinel-2 along with deforestation and fire datasets are provided for use as part of these challenges at https://sites.google.com/view/rainforest-challenge. The data is provided in the form of NetCDF files as well as zipped tiff images. A small sample of the data formats is provided in this repository at ?????.
+Multi-modal data collected from Landsat-5, Landsat-8, Sentinel-1, and Sentinel-2 along with deforestation and fire datasets are provided for use as part of these challenges at https://sites.google.com/view/rainforest-challenge. The data is provided in the form of NetCDF files as well as zipped tiff images. A small sample of the data formats is provided in this repository at [here](https://github.com/MIT-AI-Accelerator/multiearth-challenge/tree/main/src/multiearth_challenge/data/sample_dataset).
 
 This repository holds tools for working with the large quantity of remote sensing data provided for these challenges.
 
