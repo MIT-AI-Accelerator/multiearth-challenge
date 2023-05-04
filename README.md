@@ -34,13 +34,13 @@ There are several dataset classes that are provided for loading MultiEarth data 
 [ImageSegmentationDataset](https://github.com/MIT-AI-Accelerator/multiearth-challenge/blob/main/src/multiearth_challenge/datasets/segmentation_dataset.py) is a dataset designed for an image segmentation task, such as might be used in the detection of deforestation or burned region sub-challenges. It stores MultiEarth data and can be used to retrieve an image and its corresponding segmented image. Example usage and additional details can be found in the example_segmentation.ipynb notebook.
 
 ### SARToVisibleDataset
-[SARToVisibleDataset](https://github.com/MIT-AI-Accelerator/multiearth-challenge/blob/main/src/multiearth_challenge/datasets/translation_dataset.py) is a dataset designed for sub-challenge involving the generation of an EO image from a SAR image. It stores MultiEarth data and can be used to retrieve a SAR image and its corresponding EO image. Example usage and additional details can be found in the example_translation.ipynb notebook.
+[SARToVisibleDataset](https://github.com/MIT-AI-Accelerator/multiearth-challenge/blob/main/src/multiearth_challenge/datasets/translation_dataset.py) is a dataset designed for the sub-challenge of generating a distribution of visible images from a single SAR image. It stores MultiEarth data and can be used to retrieve a single source SAR image and a set of visible images from the same location. Note: unlike the previous datasets, there is only one source image and possibly multiple target images. Additionally, the SAR and EO images are not co-collected. Example usage and additional details can be found in the example_translation.ipynb notebook.
 
 ### Prediction Dataset
 [ImagePredictionDataset](https://github.com/MIT-AI-Accelerator/multiearth-challenge/blob/main/src/multiearth_challenge/datasets/prediction_dataset.py) is a dataset designed for the "Long-term Prediction of Environmental Trends" category of challenges. It stores MultiEarth data and can be used to retrieve a set of past images and a target image from a future date, all for the same location in the Amazon. Example usage and additional details can be found in the example_prediction.ipynb notebook.
 
-## Zip File Utilities
-In addition to providing the data in the form of NetCDF files, zip files in the same format as the data provided as part of the MultiEarth 2022 challenge are also being made available. This is the same data as that in the NetCDF files, but provided in an alternate format. Simple functions for parsing these files are provided in https://github.com/MIT-AI-Accelerator/multiearth-challenge/blob/main/src/multiearth_challenge/zip_file_tools.py. Example usage and additional details can be found in the example_zip_utils.ipynb notebook.
+## Tiff File Utilities
+In addition to providing the data in the form of NetCDF files, tiff files in the same format as the data provided as part of the MultiEarth 2022 challenge are also being made available. This is the same data as that in the NetCDF files, but provided in an alternate format. Simple functions for parsing these files are provided in https://github.com/MIT-AI-Accelerator/multiearth-challenge/blob/main/src/multiearth_challenge/tiff_file_tools.py. Example usage and additional details can be found in the example_tiff_utils.ipynb notebook.
 
 
 ## Acknowledgement

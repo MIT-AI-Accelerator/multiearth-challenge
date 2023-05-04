@@ -485,7 +485,7 @@ class MultiEarthDatasetBase:
         """
         return len(self.indices)
 
-    def __getitem__(self, index: int) -> Tuple[List[DatasetData], DatasetData]:
+    def __getitem__(self, index: int) -> Tuple[Union[DatasetData, List[DatasetData]], Union[DatasetData, List[DatasetData]]]:
         """Returns paired source and target data held by this dataset.
 
         Parameters
@@ -495,7 +495,7 @@ class MultiEarthDatasetBase:
 
         Returns
         -------
-        Tuple[List[DatasetData], DatasetData]
+        Tuple[Union[DatasetData, List[DatasetData]], Union[DatasetData, List[DatasetData]]]:
         A tuple where the first element is list of source data meant
         to serve as an input to a model. 
 
@@ -504,6 +504,8 @@ class MultiEarthDatasetBase:
         data, but source data may be paired with more than one target
         and target data and vice-versa. The data will be filtered by
         any data filters that have been set.
+
+        With SARToEODataset, there will be only a single source datum.
 
         The DatasetData type is a dictionary that holds sample imagery
         as well as the image's collection date and the latitude /

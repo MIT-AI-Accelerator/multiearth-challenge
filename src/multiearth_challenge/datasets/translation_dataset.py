@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Dict, Iterable, Optional, Sequence, Tuple
+from typing import Dict, Iterable, List, Optional, Sequence, Tuple
 
 import multiearth_challenge.datasets.base_datasets as bd
 import multiearth_challenge.datasets.data_filters as df
@@ -8,10 +8,10 @@ import multiearth_challenge.datasets.relative_data_filters as rdf
 
 class SARToVisibleDataset(bd.MultiEarthDatasetBase):
     """A dataset class intended to be used for supervised learning of the
-    translation of a SAR image to a visible image. It loads MultiEarth
-    data and returns samples consisting of a target image paired with
-    visible imagery at the same location along with associated
-    metadata. The target image may be None if no imagery is contained
+    translation of a SAR image to a visible image. It loads MultiEarth data
+    and returns samples consisting of a source SAR image paired with one or
+    more visible images at the same location along with associated metadata.
+    The target image may be None if no imagery is contained
     in the NetCDF file. This will be the case for data supplied as
     test targets for the MultiEarth challenge where only the target
     metadata is supplied.
@@ -28,7 +28,7 @@ class SARToVisibleDataset(bd.MultiEarthDatasetBase):
         visible_bands: Dict[str, Iterable[str]] = df.RGB_BANDS,
         merge_visible_bands: bool = False,
         max_visible_cloud_coverage: float = 0.0,
-        single_source_image: bool = True,
+        single_target_image: bool = False,
         error_on_empty: bool = True,
     ):
         """Note, this initialization will open file handles to a NetCDF
@@ -101,13 +101,11 @@ class SARToVisibleDataset(bd.MultiEarthDatasetBase):
             cloud coverage provided by the sensor's QA bands. This is
             especially true for Sentinel-2 data.
 
-        single_source_image: bool, default=True
-            If True, for each target image only a single source image
-            is returned in a unique pair. A single source image may be
-            paired with multiple target images and vice-versa
-            depending on data filters applied. If False, each target
-            image is returned with all source images at the same
-            location that satisfy applied data filters.
+        single_target_image: bool, default=False
+            If True, for each target image only a single target image
+            is returned in a unique pair.
+            If False, each source image is returned with all target images
+            at the same location that satisfy applied data filters.
 
         error_on_empty: bool, default=True
             If True, if no source or target image remain after
@@ -140,13 +138,40 @@ class SARToVisibleDataset(bd.MultiEarthDatasetBase):
             df.DataBandFilter(visible_bands, include=True),
         ]
         super().__init__(
-            source_files=sar_files,
-            target_files=visible_files,
-            source_data_filters=sar_data_filters,
-            target_data_filters=visible_data_filters,
-            merge_source_bands=merge_sar_bands,
-            merge_target_bands=merge_visible_bands,
+            # swap source and target so that __getitem__ will return multiple
+            # visible images from a single SAR image
+            source_files=visible_files,
+            target_files=sar_files,
+            source_data_filters=visible_data_filters,
+            target_data_filters=sar_data_filters,
+            merge_source_bands=merge_visible_bands,
+            merge_target_bands=merge_sar_bands,
             relative_date_filter=relative_date_filter,
-            single_source_image=single_source_image,
+            single_source_image=single_target_image,
             error_on_empty=error_on_empty,
         )
+
+    def __getitem__(self, index: int) -> Tuple[bd.DatasetData, List[bd.DatasetData]]:
+        """Returns a single SAR image and the aligned visible images.
+        The SAR to visible image challenge requires learning a distribution
+        of possible EO images from a single SAR image, so this class returns multiple
+        target images and a single source image.
+
+        Parameters
+        ----------
+        index: int
+            The location index to retrieve imagery for.
+
+        Returns
+        -------
+        Tuple[DatasetData, List[DatasetData]]
+        A tuple where the first element is a single SAR image.
+
+        The second element holds target data from the same
+        location.
+
+        """
+        # the SAR data is actually stored as a target in the superclass, so
+        # reversing the argument order will restore the proper order
+        target_data, source_data = super().__getitem__(index)
+        return (source_data, target_data)
